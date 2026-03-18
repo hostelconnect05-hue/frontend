@@ -210,7 +210,7 @@ const StudentOutpass = () => {
       const data = await res.json();
       if (data.success) {
         // Refresh outpasses list
-        const listRes = await fetch(`http://localhost:5000/api/student/outpasses/${currentUser.userId}`);
+        const listRes = await fetch(`${API_BASE_URL}/api/student/outpasses/${currentUser.userId}`);
         const listData = await listRes.json();
         if (listData.success && Array.isArray(listData.data)) {
           setOutpasses(listData.data);
@@ -242,7 +242,7 @@ const StudentOutpass = () => {
   const handleSendOtp = async (outpassId) => {
     setOtpSendingById(prev => ({ ...prev, [outpassId]: true }));
     try {
-      const res = await fetch(`http://localhost:5000/api/student/outpass/${outpassId}/send-otp`, {
+      const res = await fetch(`${API_BASE_URL}/api/student/outpass/${outpassId}/send-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -285,7 +285,7 @@ const StudentOutpass = () => {
     }
     
     try {
-      const res = await fetch(`http://localhost:5000/api/student/outpass/${currentOutpassForOtp?.id}/verify-otp`, {
+      const res = await fetch(`${API_BASE_URL}/api/student/outpass/${currentOutpassForOtp?.id}/verify-otp`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ otp: otpInput }),
@@ -295,7 +295,7 @@ const StudentOutpass = () => {
       
       if (data.success) {
         // Refresh outpasses list
-        const listRes = await fetch(`http://localhost:5000/api/student/outpasses/${currentUser.userId}`);
+        const listRes = await fetch(`${API_BASE_URL}/api/student/outpasses/${currentUser.userId}`);
         const listData = await listRes.json();
         if (listData.success && Array.isArray(listData.data)) {
           setOutpasses(listData.data);

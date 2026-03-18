@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { getAuthHeaders, getCurrentUser } from '../../utils/auth';
+import { API_BASE_URL } from '../../utils/config';
 import '../../styles/admin-students.css';
 
 const WardenStudents = () => {
@@ -9,14 +10,14 @@ const WardenStudents = () => {
     const isWarden = role === 'warden';
     return {
       students: isWarden
-        ? 'http://localhost:5000/api/warden/students'
-        : 'http://localhost:5000/api/admin/users?role=student',
+        ? `${API_BASE_URL}/api/warden/students`
+        : `${API_BASE_URL}/api/admin/users?role=student`,
       blocks: isWarden
-        ? 'http://localhost:5000/api/warden/hostel-blocks'
-        : 'http://localhost:5000/api/admin/hostel-blocks',
+        ? `${API_BASE_URL}/api/warden/hostel-blocks`
+        : `${API_BASE_URL}/api/admin/hostel-blocks`,
       rooms: (blockId) => isWarden
-        ? `http://localhost:5000/api/warden/rooms/${blockId}`
-        : `http://localhost:5000/api/admin/rooms/${blockId}`
+        ? `${API_BASE_URL}/api/warden/rooms/${blockId}`
+        : `${API_BASE_URL}/api/admin/rooms/${blockId}`
     };
   };
 
@@ -108,8 +109,8 @@ const WardenStudents = () => {
   const fetchAcademicSettings = async () => {
     try {
       const [collegesRes, branchesRes] = await Promise.all([
-        fetch('http://localhost:5000/api/settings/colleges?includeInactive=true'),
-        fetch('http://localhost:5000/api/settings/branches?includeInactive=true')
+        fetch(`${API_BASE_URL}/api/settings/colleges?includeInactive=true`),
+        fetch(`${API_BASE_URL}/api/settings/branches?includeInactive=true`)
       ]);
       const [collegesData, branchesData] = await Promise.all([
         collegesRes.json(),
@@ -286,7 +287,7 @@ const WardenStudents = () => {
       const userId = getStudentUserId(selectedStudent);
       const payload = JSON.stringify({ password: passwordFormData.password });
 
-      let res = await fetch(`http://localhost:5000/api/warden/user/${userId}/password`, {
+      let res = await fetch(`${API_BASE_URL}/api/warden/user/${userId}/password`, {
         method: 'PUT',
         headers: getAuthHeaders(true),
         body: payload
@@ -294,7 +295,7 @@ const WardenStudents = () => {
 
       // Fallback only for admin sessions that can use admin-scoped endpoints.
       if (res.status === 403 && (getCurrentUser()?.role || '').toLowerCase() === 'admin') {
-        res = await fetch(`http://localhost:5000/api/admin/user/${userId}/password`, {
+        res = await fetch(`${API_BASE_URL}/api/admin/user/${userId}/password`, {
           method: 'PUT',
           headers: getAuthHeaders(true),
           body: payload
@@ -333,7 +334,7 @@ const WardenStudents = () => {
 
     try {
       const newStatus = pendingStatusStudent.status === 'active' ? 'inactive' : 'active';
-      const res = await fetch(`http://localhost:5000/api/warden/user/${getStudentUserId(pendingStatusStudent)}/status`, {
+      const res = await fetch(`${API_BASE_URL}/api/warden/user/${getStudentUserId(pendingStatusStudent)}/status`, {
         method: 'PUT',
         headers: getAuthHeaders(true),
         body: JSON.stringify({ status: newStatus }),
@@ -415,7 +416,7 @@ const WardenStudents = () => {
         payload.roomId = parseInt(formData.room);
       }
 
-      const res = await fetch(`http://localhost:5000/api/warden/user/${getStudentUserId(selectedStudent)}`, {
+      const res = await fetch(`${API_BASE_URL}/api/warden/user/${getStudentUserId(selectedStudent)}`, {
         method: 'PUT',
         headers: getAuthHeaders(true),
         body: JSON.stringify(payload)
@@ -442,7 +443,7 @@ const WardenStudents = () => {
   const handleConfirmDelete = async () => {
     setSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/warden/user/${getStudentUserId(selectedStudent)}`, {
+      const res = await fetch(`${API_BASE_URL}/api/warden/user/${getStudentUserId(selectedStudent)}`, {
         method: 'DELETE',
         headers: getAuthHeaders()
       });
