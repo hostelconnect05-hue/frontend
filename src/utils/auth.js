@@ -115,7 +115,7 @@ export const login = async (email, password, userType = 'student') => {
 
       return {
         success: false,
-        message: 'Cannot connect to server. Start backend on http://localhost:5000 or use demo credentials.'
+        message: 'Cannot connect to server. Please ensure the backend is running and reachable.'
       };
     } else {
       // Other errors

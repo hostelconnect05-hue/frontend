@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { API_BASE_URL } from '../../utils/config';
 import '../../styles/admin-students.css';
 
 const AdminStudents = () => {
@@ -22,7 +23,7 @@ const AdminStudents = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/admin/users?role=student');
+      const res = await fetch(`${API_BASE_URL}/api/admin/users?role=student`);
       const data = await res.json();
       
       if (data.success && Array.isArray(data.data)) {
@@ -38,7 +39,7 @@ const AdminStudents = () => {
 
   const fetchHostelBlocks = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/admin/hostel-blocks');
+      const res = await fetch(`${API_BASE_URL}/api/admin/hostel-blocks`);
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
         setHostelBlocks(data.data);
@@ -56,7 +57,7 @@ const AdminStudents = () => {
     
     setRoomLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/rooms/${blockId}`);
+      const res = await fetch(`${API_BASE_URL}/api/admin/rooms/${blockId}`);
       const data = await res.json();
       if (data.success && Array.isArray(data.data)) {
         setAvailableRooms(data.data);
@@ -72,8 +73,8 @@ const AdminStudents = () => {
   const fetchAcademicSettings = async () => {
     try {
       const [collegesRes, branchesRes] = await Promise.all([
-        fetch('http://localhost:5000/api/settings/colleges?includeInactive=true'),
-        fetch('http://localhost:5000/api/settings/branches?includeInactive=true')
+        fetch(`${API_BASE_URL}/api/settings/colleges?includeInactive=true`),
+        fetch(`${API_BASE_URL}/api/settings/branches?includeInactive=true`)
       ]);
       const [collegesData, branchesData] = await Promise.all([
         collegesRes.json(),
@@ -245,7 +246,7 @@ const AdminStudents = () => {
 
     setSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/user/${selectedStudent.id}/password`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/user/${selectedStudent.id}/password`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: passwordFormData.password })
@@ -274,7 +275,7 @@ const AdminStudents = () => {
   const handleToggleStatus = async (student) => {
     try {
       const newStatus = student.status === 'active' ? 'inactive' : 'active';
-      const res = await fetch(`http://localhost:5000/api/admin/user/${student.id}/status`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/user/${student.id}/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
@@ -350,7 +351,7 @@ const AdminStudents = () => {
         payload.roomId = parseInt(formData.room);
       }
 
-      const res = await fetch(`http://localhost:5000/api/admin/user/${selectedStudent.id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/user/${selectedStudent.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -377,7 +378,7 @@ const AdminStudents = () => {
   const handleConfirmDelete = async () => {
     setSubmitting(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/admin/user/${selectedStudent.id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/admin/user/${selectedStudent.id}`, {
         method: 'DELETE',
       });
 

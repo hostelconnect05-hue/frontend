@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getCurrentUser } from '../../utils/auth';
+import { API_BASE_URL } from '../../utils/config';
 import '../../styles/student-outpass.css';
 
 const StudentOutpass = () => {
@@ -61,7 +62,7 @@ const StudentOutpass = () => {
   useEffect(() => {
     const checkHolidayMode = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/system/holiday-mode');
+        const res = await fetch(`${API_BASE_URL}/api/system/holiday-mode`);
         const data = await res.json();
         if (data.success) {
           setHolidayMode(data.holidayMode);
@@ -82,7 +83,7 @@ const StudentOutpass = () => {
       try {
         if (!currentUser?.userId) return;
         
-        const res = await fetch(`http://localhost:5000/api/student/outpasses/${currentUser.userId}`);
+        const res = await fetch(`${API_BASE_URL}/api/student/outpasses/${currentUser.userId}`);
         const data = await res.json();
         if (data.success && Array.isArray(data.data)) {
           setOutpasses(data.data);
@@ -191,7 +192,7 @@ const StudentOutpass = () => {
     
     setSubmitting(true);
     try {
-      const res = await fetch('http://localhost:5000/api/student/outpass', {
+      const res = await fetch(`${API_BASE_URL}/api/student/outpass`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
